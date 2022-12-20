@@ -10,6 +10,6 @@ public class HelloController {
 
     @GetMapping
     public String helloTest() {
-        return "Hello Test 성공!";
+        return "Hello Test 성공 + CICD Test 성공!";
     }
 }
