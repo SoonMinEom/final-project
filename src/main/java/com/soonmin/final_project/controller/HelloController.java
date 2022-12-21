@@ -14,7 +14,7 @@ public class HelloController {
     }
 
 
-    @GetMapping
+    @GetMapping("/2")
     public String helloTest2() {
         return "test";
     }
