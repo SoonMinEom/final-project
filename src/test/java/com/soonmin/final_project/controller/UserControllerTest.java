@@ -45,11 +45,13 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 성공")
+    @WithMockUser
     void join_success() throws Exception {
         UserDto userDto = new UserDto(1,"soonmin", "1234");
         when(userService.join(any())).thenReturn(userDto);
 
         mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(userJoinRequest)))
                 .andDo(print())
@@ -59,10 +61,12 @@ class UserControllerTest {
 
     @Test
     @DisplayName("회원가입 실패 - userName중복인 경우")
+    @WithMockUser
     void join_fail() throws Exception {
         when(userService.join(any())).thenThrow(new LikeLionException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage()));
 
         mockMvc.perform(post("/api/v1/users/join")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(userJoinRequest)))
                 .andDo(print())
@@ -74,10 +78,12 @@ class UserControllerTest {
 
     @Test
     @DisplayName("로그인 성공")
+    @WithMockUser
     void login_success() throws Exception {
         when(userService.login(any())).thenReturn("token");
 
         mockMvc.perform(post("/api/v1/users/login")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
