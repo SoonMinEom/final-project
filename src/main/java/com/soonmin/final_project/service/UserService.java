@@ -30,6 +30,13 @@ public class UserService {
     }
 
     public String login(UserLoginRequest request) {
+        User user = userRepository.findByUserName(request.getUserName())
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        if (!encoder.matches(request.getPassword(), user.getPassword())) {
+            throw new LikeLionException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
         return JwtUtil.createToken(request.getUserName(),secretKey,expireTime);
     }
 }
