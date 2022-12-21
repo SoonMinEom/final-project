@@ -12,4 +12,10 @@ public class HelloController {
     public String helloTest() {
         return "hello";
     }
+
+
+    @GetMapping
+    public String helloTest2() {
+        return "test";
+    }
 }
