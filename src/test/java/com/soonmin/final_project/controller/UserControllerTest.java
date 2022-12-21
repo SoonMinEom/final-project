@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.dto.UserDto;
 import com.soonmin.final_project.domain.dto.UserJoinRequest;
+import com.soonmin.final_project.domain.dto.UserLoginRequest;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
 import com.soonmin.final_project.service.UserService;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
+@MockBean(JpaMetamodelMappingContext.class)
 class UserControllerTest {
 
     @MockBean
@@ -67,5 +70,18 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("UserName이 중복됩니다."));
     }
 
+    UserLoginRequest userLoginRequest = new UserLoginRequest("soonmin","1234");
 
+    @Test
+    @DisplayName("로그인 성공")
+    void login_success() throws Exception {
+        when(userService.login(any())).thenReturn("token");
+
+        mockMvc.perform(post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(userLoginRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.jwt").value("token"));
+    }
 }
