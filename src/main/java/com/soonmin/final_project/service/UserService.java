@@ -7,7 +7,9 @@ import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
 import com.soonmin.final_project.repository.UserRepository;
+import com.soonmin.final_project.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-
     private final BCryptPasswordEncoder encoder;
+    @Value("${jwt.token.secret}")
+    private String secretKey;
+    private long expireTime = 1000 * 60 * 60; // 1시간
 
     public UserDto join(UserJoinRequest request) {
         userRepository.findByUserName(request.getUserName())
@@ -26,6 +30,6 @@ public class UserService {
     }
 
     public String login(UserLoginRequest request) {
-        return "token";
+        return JwtUtil.createToken(request.getUserName(),secretKey,expireTime);
     }
 }
