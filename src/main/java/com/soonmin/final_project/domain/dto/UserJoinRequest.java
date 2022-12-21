@@ -1,5 +1,6 @@
 package com.soonmin.final_project.domain.dto;
 
+import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class UserJoinRequest {
         return User.builder()
                 .userName(this.userName)
                 .password(this.password)
+                .role(UserRole.USER)
                 .build();
     }
 }
