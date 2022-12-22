@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest
+@WebMvcTest(UserController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 class UserControllerTest {
 
@@ -88,7 +88,8 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").value("token"));
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.jwt").value("token"));
     }
 
     @Test
