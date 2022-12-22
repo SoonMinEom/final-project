@@ -11,8 +11,8 @@ public class ExceptionManager {
 
     @ExceptionHandler(LikeLionException.class)
     public ResponseEntity<?> LikeLionExceptionHandler (LikeLionException e) {
-        ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode().name(), e.getMessage());
         return ResponseEntity.status(e.getErrorCode().getStatus())
-                .body(Response.error(e.getErrorCode().name(), errorResponse));
+                .body(Response.error(errorResponse));
     }
 }
