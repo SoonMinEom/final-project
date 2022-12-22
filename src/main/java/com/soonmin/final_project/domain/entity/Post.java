@@ -6,25 +6,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class Post extends Base {
+public class Post extends PostBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
     private String body;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+
 
     public PostDto toDto() {
-        return new PostDto(this.id, this.title, this.body);
+        return new PostDto(this.id, this.title, this.body,this.user.getUserName(), this.getCreatedAt(), this.getLastModifiedAt());
     }
 }

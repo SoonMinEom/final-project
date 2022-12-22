@@ -16,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -45,7 +48,7 @@ class PostControllerTest {
     @WithMockUser
     @DisplayName("포스트 작성 성공")
     void postCreate_success() throws Exception {
-        when(postService.create(any(), any())).thenReturn(new PostDto(1,"test", "test"));
+        when(postService.create(any(), any())).thenReturn(PostDto.builder().id(1).title("test").body("test").build());
 
         mockMvc.perform(post("/api/v1/posts")
                         .with(csrf())
@@ -68,7 +71,7 @@ class PostControllerTest {
                         .content(objectMapper.writeValueAsBytes(postCreateRequest)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.resultCode").value("INVALID_PERMISSION"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PERMISSION"))
                 .andExpect(jsonPath("$.result.message").value("사용자가 권한이 없습니다."));
     }
 
@@ -84,7 +87,7 @@ class PostControllerTest {
                         .content(objectMapper.writeValueAsBytes(postCreateRequest)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.resultCode").value("INVALID_TOKEN"))
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_TOKEN"))
                 .andExpect(jsonPath("$.result.message").value("잘못된 토큰입니다."));
     }
 }
