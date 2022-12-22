@@ -20,7 +20,7 @@ public class UserService {
     private final BCryptPasswordEncoder encoder;
     @Value("${jwt.token.secret}")
     private String secretKey;
-    private long expireTime = 1000 * 60 * 60; // 1시간
+    private long expireTime = 1000*60*60; // 1시간
 
     public UserDto join(UserJoinRequest request) {
         userRepository.findByUserName(request.getUserName())
@@ -38,5 +38,10 @@ public class UserService {
         }
 
         return JwtUtil.createToken(request.getUserName(),secretKey,expireTime);
+    }
+
+    public User getUserByUserName(String userName) {
+        return userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
     }
 }
