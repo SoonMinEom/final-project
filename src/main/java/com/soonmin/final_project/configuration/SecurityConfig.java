@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/users/**").permitAll()
                 .antMatchers("/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/posts/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/posts").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/posts").authenticated()
                 .and()
                 .sessionManagement()

@@ -36,4 +36,5 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             os.flush();
         }
     }
+
 }
