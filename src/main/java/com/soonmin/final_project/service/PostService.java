@@ -45,4 +45,9 @@ public class PostService {
         Page<Post> postList = postRepository.findAll(pageable);
         return postList.stream().map(post -> post.toDto().toViewResponse()).collect(Collectors.toList());
     }
+
+    public Integer delete(Integer id) {
+        postRepository.deleteById(id);
+        return id;
+    }
 }

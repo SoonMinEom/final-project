@@ -36,4 +36,10 @@ public class PostController {
         PostDto postDto = postService.viewDetail(id);
         return Response.success(postDto.toViewResponse());
     }
+
+    @DeleteMapping("/{id}")
+    public Response<PostDeleteResponse> deletePost(@PathVariable Integer id) {
+        Integer deletedId = postService.delete(id);
+        return Response.success(new PostDeleteResponse("포스트 삭제 완료", deletedId));
+    }
 }
