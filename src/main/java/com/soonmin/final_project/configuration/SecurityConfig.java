@@ -34,6 +34,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET,"/api/v1/posts/{id}").permitAll()
                 .antMatchers(HttpMethod.GET,"/api/v1/posts").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/v1/posts").authenticated()
+                .antMatchers(HttpMethod.DELETE,"/api/v1/posts/{id}").authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

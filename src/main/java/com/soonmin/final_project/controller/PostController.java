@@ -38,8 +38,8 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public Response<PostDeleteResponse> deletePost(@PathVariable Integer id) {
-        Integer deletedId = postService.delete(id);
+    public Response<PostDeleteResponse> deletePost(@PathVariable Integer id, Authentication authentication) {
+        Integer deletedId = postService.delete(id, authentication);
         return Response.success(new PostDeleteResponse("포스트 삭제 완료", deletedId));
     }
 }

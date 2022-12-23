@@ -21,14 +21,14 @@ import java.io.OutputStream;
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_PERMISSION.name(), ErrorCode.INVALID_PERMISSION.getMessage());
+    private static ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_TOKEN.name(), ErrorCode.INVALID_TOKEN.getMessage());
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.error("UnAuthorized : {}", authException.getMessage());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(ErrorCode.INVALID_PERMISSION.getStatus().value());
+        response.setStatus(ErrorCode.INVALID_TOKEN.getStatus().value());
 
         try (OutputStream os = response.getOutputStream()) {
             ObjectMapper objectMapper = new ObjectMapper();
