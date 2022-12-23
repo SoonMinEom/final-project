@@ -36,10 +36,15 @@ public class PostController {
         PostDto postDto = postService.viewDetail(id);
         return Response.success(postDto.toViewResponse());
     }
-
     @DeleteMapping("/{id}")
     public Response<PostDeleteResponse> deletePost(@PathVariable Integer id, Authentication authentication) {
-        Integer deletedId = postService.delete(id, authentication);
-        return Response.success(new PostDeleteResponse("포스트 삭제 완료", deletedId));
+        Integer deletedPostId = postService.delete(id, authentication);
+        return Response.success(new PostDeleteResponse("포스트 삭제 완료", deletedPostId));
+    }
+
+    @PutMapping("/{id}")
+    public Response<PostUpdateResponse> updatePost(@PathVariable Integer id, Authentication authentication, PostUpdateRequest request) {
+        Integer updatedPostId = postService.update(id, authentication, request);
+        return Response.success(new PostUpdateResponse("포스트 수정 완료", updatedPostId));
     }
 }

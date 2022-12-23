@@ -2,6 +2,7 @@ package com.soonmin.final_project.service;
 
 import com.soonmin.final_project.domain.dto.PostCreateRequest;
 import com.soonmin.final_project.domain.dto.PostDto;
+import com.soonmin.final_project.domain.dto.PostUpdateRequest;
 import com.soonmin.final_project.domain.dto.PostViewResponse;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
@@ -59,6 +60,20 @@ public class PostService {
         }
 
         postRepository.deleteById(id);
+
+        return id;
+    }
+
+    public Integer update(Integer id, Authentication authentication, PostUpdateRequest request) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(()->new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        if (!post.getUser().getUserName().equals(authentication.getName())){
+            throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        post.update(request.getTitle(), request.getBody());
+        postRepository.save(post);
 
         return id;
     }

@@ -24,9 +24,12 @@ public class Post extends PostBase {
     @JoinColumn(name = "user_id")
     private User user;
 
-
-
     public PostDto toDto() {
         return new PostDto(this.id, this.title, this.body,this.user.getUserName(), this.getCreatedAt(), this.getLastModifiedAt());
+    }
+
+    public void update(String title, String body) {
+        this.title = title;
+        this.body = body;
     }
 }
