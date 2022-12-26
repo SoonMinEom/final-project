@@ -39,8 +39,9 @@ public class PostService {
     }
 
     public PostDto viewDetail(Integer id) {
-        Optional<Post> post = postRepository.findById(id);
-        return post.get().toDto();
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+        return post.toDto();
     }
 
     @Transactional
