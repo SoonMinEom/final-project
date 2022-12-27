@@ -59,6 +59,7 @@ class PostServiceTest {
     void postCreate_success() {
         User mockUser = mock(User.class);
         Post mockPost = mock(Post.class);
+
         Mockito.when(userRepository.findByUserName(user.getUserName())).thenReturn(Optional.of(user));
         Mockito.when(postRepository.save(postCreateRequest.toEntity(any()))).thenReturn(post);
 
@@ -68,8 +69,7 @@ class PostServiceTest {
     @Test
     @DisplayName("포스트 등록 실패 : 유저가 존재하지 않을 때")
     void postCreate_fail() {
-        Mockito.when(userRepository.findByUserName(user.getUserName()))
-                .thenReturn(Optional.empty());
+        Mockito.when(userRepository.findByUserName(user.getUserName())).thenReturn(Optional.empty());
         Mockito.when(postRepository.save(postCreateRequest.toEntity(any()))).thenReturn(post);
 
         String errorMessage = Assertions.assertThrows(LikeLionException.class, () -> postService.create(postCreateRequest, user.getUserName())).getMessage();
@@ -82,7 +82,9 @@ class PostServiceTest {
     @DisplayName("포스트 조회 성공")
     void viewDetail_success() {
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
+
         PostDto postDto = postService.viewDetail(post.getId());
+
         Assertions.assertEquals("test",postDto.getUserName());
     }
 
@@ -90,7 +92,9 @@ class PostServiceTest {
     @DisplayName("포스트 수정 실패 1 : 포스트 존재하지 않음")
     void updatePost_fail1() {
         when(postRepository.findById(post.getId())).thenReturn(Optional.empty());
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class, ()->postService.update(post.getId(), user.getUserName(), postUpdateRequest)).getMessage();
+
         Assertions.assertEquals(ErrorCode.POST_NOT_FOUND.getMessage(), errorMessage);
     }
 
@@ -98,9 +102,12 @@ class PostServiceTest {
     @DisplayName("포스트 수정 실패 2 : 작성자 != 유저")
     void updatePost_fail2() {
         User user2 = new User(2, "test2", "test2", UserRole.USER);
+
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
         when(userRepository.findByUserName(user2.getUserName())).thenReturn(Optional.of(user));
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class, () -> postService.update(post.getId(), user2.getUserName(), postUpdateRequest)).getMessage();
+
         Assertions.assertEquals(ErrorCode.INVALID_PERMISSION.getMessage(), errorMessage);
     }
 
@@ -109,7 +116,9 @@ class PostServiceTest {
     void updatePost_fail3() {
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
         when(userRepository.findByUserName(user.getUserName())).thenReturn(Optional.empty());
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class, ()->postService.update(post.getId(), user.getUserName(), postUpdateRequest)).getMessage();
+
         Assertions.assertEquals(ErrorCode.USERNAME_NOT_FOUND.getMessage(), errorMessage);
     }
 
@@ -119,7 +128,9 @@ class PostServiceTest {
     void deletePost_fail1() {
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
         when(userRepository.findByUserName(user.getUserName())).thenReturn(Optional.empty());
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class,()->postService.delete(post.getId(), user.getUserName())).getMessage();
+
         Assertions.assertEquals(ErrorCode.USERNAME_NOT_FOUND.getMessage(),errorMessage );
     }
 
@@ -127,7 +138,9 @@ class PostServiceTest {
     @DisplayName("포스트 삭제 실패 2 :  포스트 존재하지 않음")
     void deletePost_fail2() {
         when(postRepository.findById(post.getId())).thenReturn(Optional.empty());
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class, () -> postService.delete(post.getId(), user.getUserName())).getMessage();
+
         Assertions.assertEquals(ErrorCode.POST_NOT_FOUND.getMessage(),errorMessage );
     }
 
@@ -135,8 +148,10 @@ class PostServiceTest {
     @DisplayName("포스트 삭제 실패 3 : 작성자와 유저가 같지 않음")
     void name() {
         User user2 = new User(2, "test2", "test2", UserRole.USER);
+
         when(postRepository.findById(post.getId())).thenReturn(Optional.of(post));
         when(userRepository.findByUserName(user2.getUserName())).thenReturn(Optional.of(user2));
+
         String errorMessage = Assertions.assertThrows(LikeLionException.class, () -> postService.delete(post.getId(), user2.getUserName())).getMessage();
         Assertions.assertEquals(ErrorCode.INVALID_PERMISSION.getMessage(),errorMessage );
     }
