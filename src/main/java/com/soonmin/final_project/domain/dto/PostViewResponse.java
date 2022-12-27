@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 public class PostViewResponse {
-    private Integer postId;
+    private Integer Id;
     private String title;
     private String body;
     private String userName;
