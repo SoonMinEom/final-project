@@ -29,7 +29,7 @@ public class PostController {
     @GetMapping
     public Response<PostList> viewList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         List<PostViewResponse> postList = postService.viewList(pageable);
-        return Response.success(new PostList(postList, (postList.size()/20)+1));
+        return Response.success(new PostList(postList, pageable));
     }
     @GetMapping("/{id}")
     public Response<PostViewResponse> viewDetail(@PathVariable Integer id) {

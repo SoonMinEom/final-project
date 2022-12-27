@@ -11,6 +11,6 @@ import java.util.List;
 @Getter
 public class PostList {
 
-    private List<?> content;
-    private int totalPage;
+    private List<PostViewResponse> content;
+    private Pageable pageable;
 }
