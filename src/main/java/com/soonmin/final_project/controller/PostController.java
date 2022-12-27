@@ -23,7 +23,8 @@ public class PostController {
 
     @PostMapping
     public Response<PostCreateResponse> createPost (@RequestBody PostCreateRequest request, Authentication authentication) {
-        PostDto postDto = postService.create(request, authentication);
+        String userName = authentication.getName();
+        PostDto postDto = postService.create(request, userName);
         return Response.success(postDto.toCreateResponse());
     }
     @GetMapping
@@ -38,13 +39,13 @@ public class PostController {
     }
     @DeleteMapping("/{id}")
     public Response<PostDeleteResponse> deletePost(@PathVariable Integer id, Authentication authentication) {
-        Integer deletedPostId = postService.delete(id, authentication);
+        Integer deletedPostId = postService.delete(id, authentication.getName());
         return Response.success(new PostDeleteResponse("포스트 삭제 완료", deletedPostId));
     }
 
     @PutMapping("/{id}")
     public Response<PostUpdateResponse> updatePost(@PathVariable Integer id, Authentication authentication, PostUpdateRequest request) {
-        Integer updatedPostId = postService.update(id, authentication, request);
+        Integer updatedPostId = postService.update(id, authentication.getName(), request);
         return Response.success(new PostUpdateResponse("포스트 수정 완료", updatedPostId));
     }
 }

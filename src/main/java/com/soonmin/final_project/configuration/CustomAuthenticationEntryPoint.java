@@ -20,9 +20,7 @@ import java.io.OutputStream;
 @Component
 @Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
     private static ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INVALID_TOKEN.name(), ErrorCode.INVALID_TOKEN.getMessage());
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         log.error("UnAuthorized : {}", authException.getMessage());
@@ -36,5 +34,4 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             os.flush();
         }
     }
-
 }

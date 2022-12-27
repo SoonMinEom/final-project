@@ -31,8 +31,8 @@ public class PostService {
 
     private final UserRepository userRepository;
 
-    public PostDto create(PostCreateRequest request, Authentication authentication) {
-        User user = userRepository.findByUserName(authentication.getName())
+    public PostDto create(PostCreateRequest request, String userName) {
+        User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
         Post post = postRepository.save(request.toEntity(user));
         return post.toDto();
@@ -50,13 +50,16 @@ public class PostService {
         return postList.stream().map(post -> post.toDto().toViewResponse()).collect(Collectors.toList());
     }
 
-    public Integer delete(Integer id, Authentication authentication) {
+    public Integer delete(Integer id, String userName) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
+        userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
         log.info("userName get at post : {}", post.getUser().getUserName());
-        log.info("userName get at authentication : {}", authentication.getName());
-        if (!post.getUser().getUserName().equals(authentication.getName())){
+        log.info("userName get at authentication : {}", userName);
+        if (!post.getUser().getUserName().equals(userName)){
             throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
@@ -65,11 +68,14 @@ public class PostService {
         return id;
     }
 
-    public Integer update(Integer id, Authentication authentication, PostUpdateRequest request) {
+    public Integer update(Integer id, String userName, PostUpdateRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
 
-        if (!post.getUser().getUserName().equals(authentication.getName())){
+        userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        if (!post.getUser().getUserName().equals(userName)){
             throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
         }
 
