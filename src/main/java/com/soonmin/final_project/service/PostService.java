@@ -31,6 +31,7 @@ public class PostService {
 
     private final UserRepository userRepository;
 
+    // 포스트 작성
     public PostDto create(PostCreateRequest request, String userName) {
         User user = userRepository.findByUserName(userName)
                 .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -38,18 +39,21 @@ public class PostService {
         return post.toDto();
     }
 
+    // 포스트 디테일 보기
     public PostDto viewDetail(Integer id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
         return post.toDto();
     }
 
+    // 포스트 리스트 보기
     @Transactional
     public List<PostViewResponse> viewList(Pageable pageable) {
         Page<Post> postList = postRepository.findAll(pageable);
         return postList.stream().map(post -> post.toDto().toViewResponse()).collect(Collectors.toList());
     }
 
+    // 포스트 삭제
     public Integer delete(Integer id, String userName) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
@@ -68,6 +72,7 @@ public class PostService {
         return id;
     }
 
+    // 포스트 수정
     public Integer update(Integer id, String userName, PostUpdateRequest request) {
         Post post = postRepository.findById(id)
                 .orElseThrow(()->new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));

@@ -24,6 +24,7 @@ public class UserService {
     private String secretKey;
     private long expireTime = 1000*60*60; // 1시간
 
+    // 회원 가입
     public UserDto join(UserJoinRequest request) {
         userRepository.findByUserName(request.getUserName())
                 .ifPresent(user -> {throw new LikeLionException(ErrorCode.DUPLICATED_USER_NAME, ErrorCode.DUPLICATED_USER_NAME.getMessage());});
@@ -31,6 +32,7 @@ public class UserService {
         return savedUser.toDto();
     }
 
+    // 로그인
     public String login(UserLoginRequest request) {
         User user = userRepository.findByUserName(request.getUserName())
                 .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
@@ -42,6 +44,7 @@ public class UserService {
         return JwtUtil.createToken(request.getUserName(),secretKey,expireTime);
     }
 
+    // 어드민 승급
     @Transactional
     public UserDto roleChange(Integer id, String userName) {
         User admin = userRepository.findByUserName(userName).orElseThrow(()->new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));

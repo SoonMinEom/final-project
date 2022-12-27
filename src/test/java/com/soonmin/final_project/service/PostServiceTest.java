@@ -40,6 +40,10 @@ class PostServiceTest {
     PostUpdateRequest postUpdateRequest;
     Post post;
 
+    // 서비스 테스트는 Pojo로 하라고 하셨는데...
+    // 작성하고 나서도 제 테스트가 Pojo인지 아닌지 알 수가 없슴니다...
+    // Pojo가 아니라면 어떤 부분을 고쳐야 할까요...?
+
     @BeforeEach
     void setUp() {
         postService = new PostService(postRepository, userRepository);
