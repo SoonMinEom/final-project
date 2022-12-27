@@ -51,6 +51,7 @@
 
 #### ADMIN 승급
 `POST api/v1/user/{id}/role/change`
+
 **Response Body**
 ```json
 {
