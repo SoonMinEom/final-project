@@ -5,10 +5,8 @@ import com.soonmin.final_project.domain.dto.*;
 import com.soonmin.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -26,5 +24,11 @@ public class UserController {
     public Response<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
         String token = userService.login(request);
         return Response.success(new UserLoginResponse(token));
+    }
+
+    @PostMapping("/{id}/role/change")
+    public Response<RoleChangeResponse> roleChange(@PathVariable Integer id, Authentication authentication) {
+        UserDto userDto = userService.roleChange(id, authentication.getName());
+        return Response.success(new RoleChangeResponse(userDto.getUserName(), "ADMIN 승급 성공"));
     }
 }

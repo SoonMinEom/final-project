@@ -1,5 +1,6 @@
 package com.soonmin.final_project.service;
 
+import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.dto.UserDto;
 import com.soonmin.final_project.domain.dto.UserJoinRequest;
 import com.soonmin.final_project.domain.dto.UserLoginRequest;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,20 @@ public class UserService {
         }
 
         return JwtUtil.createToken(request.getUserName(),secretKey,expireTime);
+    }
+
+    @Transactional
+    public UserDto roleChange(Integer id, String userName) {
+        User admin = userRepository.findByUserName(userName).orElseThrow(()->new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        if(admin.getRole() != UserRole.ADMIN) {
+            throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        User user = userRepository.findById(id).orElseThrow(()->new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+        user.setRole(UserRole.ADMIN);
+
+        return userRepository.save(user).toDto();
     }
 
     public User getUserByUserName(String userName) {

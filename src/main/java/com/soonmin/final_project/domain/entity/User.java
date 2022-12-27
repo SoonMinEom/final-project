@@ -2,10 +2,7 @@ package com.soonmin.final_project.domain.entity;
 
 import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.dto.UserDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 @Entity
 public class User extends UserBase {
 
