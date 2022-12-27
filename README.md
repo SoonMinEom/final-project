@@ -49,6 +49,21 @@
 ```
 <br>
 
+#### ADMIN 승급
+`POST api/v1/user/{id}/role/change`
+**Response Body**
+```json
+{
+  "resultCode": "SUCCESS",
+  "result": {
+    "userName": "string",
+    "message": "ADMIN 승급 성공"
+  }  
+}
+```
+<br>
+
+
 ### Post
 #### 리스트 조회
 `GET /api/v1/posts`
