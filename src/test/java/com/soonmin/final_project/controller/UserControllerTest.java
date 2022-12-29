@@ -71,7 +71,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userJoinRequest)))
                 .andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.resultCode").value("DUPLICATED_USER_NAME"));
+                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATED_USER_NAME"));
     }
 
     UserLoginRequest userLoginRequest = new UserLoginRequest("soonmin","1234");
@@ -104,7 +104,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.resultCode").value("USERNAME_NOT_FOUND"));
+                .andExpect(jsonPath("$.result.errorCode").value("USERNAME_NOT_FOUND"));
     }
 
     @Test
@@ -119,6 +119,6 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(userLoginRequest)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.resultCode").value("INVALID_PASSWORD"));;
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"));;
     }
 }
