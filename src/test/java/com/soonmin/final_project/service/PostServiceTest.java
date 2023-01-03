@@ -1,16 +1,13 @@
 package com.soonmin.final_project.service;
 
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
 import com.soonmin.final_project.domain.UserRole;
-import com.soonmin.final_project.domain.dto.PostCreateRequest;
-import com.soonmin.final_project.domain.dto.PostDto;
-import com.soonmin.final_project.domain.dto.PostUpdateRequest;
+import com.soonmin.final_project.domain.dto.post.PostCreateRequest;
+import com.soonmin.final_project.domain.dto.post.PostDto;
+import com.soonmin.final_project.domain.dto.post.PostUpdateRequest;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
-import com.soonmin.final_project.forTest.WithUser;
 import com.soonmin.final_project.repository.PostRepository;
 import com.soonmin.final_project.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -18,13 +15,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithMockUser;
 
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -40,9 +34,6 @@ class PostServiceTest {
     PostUpdateRequest postUpdateRequest;
     Post post;
 
-    // 서비스 테스트는 Pojo로 하라고 하셨는데...
-    // 작성하고 나서도 제 테스트가 Pojo인지 아닌지 알 수가 없슴니다...
-    // Pojo가 아니라면 어떤 부분을 고쳐야 할까요...?
 
     @BeforeEach
     void setUp() {

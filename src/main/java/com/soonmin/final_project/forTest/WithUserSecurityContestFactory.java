@@ -1,7 +1,6 @@
 package com.soonmin.final_project.forTest;
 
-import com.soonmin.final_project.domain.dto.UserJoinRequest;
-import com.soonmin.final_project.domain.dto.UserLoginRequest;
+import com.soonmin.final_project.domain.dto.user.UserJoinRequest;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 @RequiredArgsConstructor

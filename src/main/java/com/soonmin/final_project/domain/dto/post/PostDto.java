@@ -1,4 +1,4 @@
-package com.soonmin.final_project.domain.dto;
+package com.soonmin.final_project.domain.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

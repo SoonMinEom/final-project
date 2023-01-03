@@ -1,10 +1,9 @@
 package com.soonmin.final_project.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.soonmin.final_project.domain.dto.UserDto;
-import com.soonmin.final_project.domain.dto.UserJoinRequest;
-import com.soonmin.final_project.domain.dto.UserLoginRequest;
+import com.soonmin.final_project.domain.dto.user.UserDto;
+import com.soonmin.final_project.domain.dto.user.UserJoinRequest;
+import com.soonmin.final_project.domain.dto.user.UserLoginRequest;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
 import com.soonmin.final_project.service.UserService;
@@ -18,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;

@@ -1,4 +1,4 @@
-package com.soonmin.final_project.domain.dto;
+package com.soonmin.final_project.domain.dto.user;
 
 import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.entity.User;

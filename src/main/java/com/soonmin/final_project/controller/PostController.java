@@ -1,7 +1,11 @@
 package com.soonmin.final_project.controller;
 
 import com.soonmin.final_project.domain.Response;
-import com.soonmin.final_project.domain.dto.*;
+import com.soonmin.final_project.domain.dto.comment.CommentCreateRequest;
+import com.soonmin.final_project.domain.dto.comment.CommentDto;
+import com.soonmin.final_project.domain.dto.comment.CommentResponse;
+import com.soonmin.final_project.domain.dto.post.*;
+import com.soonmin.final_project.service.CommentService;
 import com.soonmin.final_project.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +24,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     // 포스트 등록
     @PostMapping
@@ -55,5 +60,12 @@ public class PostController {
     public Response<PostUpdateResponse> updatePost(@PathVariable Integer id, Authentication authentication, PostUpdateRequest request) {
         Integer updatedPostId = postService.update(id, authentication.getName(), request);
         return Response.success(new PostUpdateResponse("포스트 수정 완료", updatedPostId));
+    }
+
+    // 댓글 작성
+    @PostMapping("/{postId}/comments")
+    public Response<CommentResponse> createComment(@PathVariable Integer postId, Authentication authentication, CommentCreateRequest request) {
+        CommentDto commentDto = commentService.create(postId, authentication.getName(), request);
+        return Response.success(commentDto.toResponse());
     }
 }

@@ -1,9 +1,9 @@
 package com.soonmin.final_project.service;
 
-import com.soonmin.final_project.domain.dto.PostCreateRequest;
-import com.soonmin.final_project.domain.dto.PostDto;
-import com.soonmin.final_project.domain.dto.PostUpdateRequest;
-import com.soonmin.final_project.domain.dto.PostViewResponse;
+import com.soonmin.final_project.domain.dto.post.PostCreateRequest;
+import com.soonmin.final_project.domain.dto.post.PostDto;
+import com.soonmin.final_project.domain.dto.post.PostUpdateRequest;
+import com.soonmin.final_project.domain.dto.post.PostViewResponse;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
@@ -14,12 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

@@ -2,9 +2,9 @@ package com.soonmin.final_project.controller;
 
 import com.soonmin.final_project.domain.Response;
 import com.soonmin.final_project.domain.dto.*;
+import com.soonmin.final_project.domain.dto.user.*;
 import com.soonmin.final_project.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
