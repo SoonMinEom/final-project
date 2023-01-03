@@ -1,10 +1,10 @@
 package com.soonmin.final_project.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.UserRole;
-import com.soonmin.final_project.domain.dto.comment.CommentCreateRequest;
+import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
-import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
@@ -14,21 +14,15 @@ import com.soonmin.final_project.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.springframework.data.domain.Page;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,14 +50,13 @@ class CommentControllerTest {
     User user;
     Post post;
     CommentDto dto;
-
-    CommentCreateRequest commentCreateRequest;
+    CommentRequest commentRequest;
 
     @BeforeEach
     void beforeEach() {
         user = new User(1, "name", "password", UserRole.USER);
         post = new Post(1, "title","body",user);
-        commentCreateRequest = new CommentCreateRequest("comment test");
+        commentRequest = new CommentRequest("comment test");
         dto = CommentDto.builder()
                 .id(1)
                 .comment("test")
@@ -77,12 +70,12 @@ class CommentControllerTest {
     @DisplayName("댓글 작성 성공")
     void create_success() throws Exception {
 
-        when(commentService.create(any(), any(), any())).thenReturn(dto);
+        when(commentService.create(any(), any(), any())).thenReturn(mock(CommentDto.class));
 
         mockMvc.perform(post("/api/v1/posts/1/comments")
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(commentCreateRequest)))
+                    .content(objectMapper.writeValueAsBytes(commentRequest)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"));
@@ -97,7 +90,7 @@ class CommentControllerTest {
         mockMvc.perform(post("/api/v1/posts/1/comments")
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsBytes(commentCreateRequest)))
+                    .content(objectMapper.writeValueAsBytes(commentRequest)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
@@ -111,7 +104,7 @@ class CommentControllerTest {
         mockMvc.perform(post("/api/v1/posts/1/comments")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(commentCreateRequest)))
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.result.errorCode").value("POST_NOT_FOUND"));
@@ -127,5 +120,76 @@ class CommentControllerTest {
                         .param("sort", "createdAt,desc"))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 수정 성공")
+    void update_success() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenReturn(dto);
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.comment").value("test"));
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("댓글 수정 실패(1) : 인증 실패")
+    void update_fail1() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage()));
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 수정 실패(2) : 댓글 불일치")
+    void update_fail2() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 수정 실패(3) : 작성자 불일치")
+    void update_fail3() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage()));
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 수정 실패(4) : 데이터베이스 에러")
+    void update_fail4() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.DATABASE_ERROR, ErrorCode.DATABASE_ERROR.getMessage()));
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
     }
 }

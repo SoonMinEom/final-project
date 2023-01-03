@@ -38,4 +38,8 @@ public class Comment extends PostBase{
                 .build();
     }
 
+    public void update(String comment) {
+        this.comment = comment;
+    }
+
 }
