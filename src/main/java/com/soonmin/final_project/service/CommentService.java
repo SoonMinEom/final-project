@@ -75,4 +75,24 @@ public class CommentService {
 
         return updatedComment.toDto();
     }
+
+    public Integer delete(Integer postId, Integer id, String userName) {
+        // 포스트가 존재하는지 검증
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()-> new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        // 댓글이 존재하는지 검증
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(()-> new LikeLionException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
+
+        // 댓글의 작성자와 삭제 요청한 User 가 같은지 검증
+        if (!comment.getUser().getUserName().equals(userName)) {
+            throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
+        }
+
+        // 댓글 삭제
+        commentRepository.deleteById(id);
+
+        return id;
+    }
 }

@@ -1,6 +1,7 @@
 package com.soonmin.final_project.controller;
 
 import com.soonmin.final_project.domain.Response;
+import com.soonmin.final_project.domain.dto.comment.CommentDeleteResponse;
 import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
 import com.soonmin.final_project.domain.dto.comment.CommentResponse;
@@ -82,5 +83,12 @@ public class PostController {
     public Response<CommentResponse> updateComment(@PathVariable Integer postId, @PathVariable Integer id, @RequestBody CommentRequest request, Authentication authentication) {
         CommentDto commentDto = commentService.update(postId, id, request, authentication.getName());
         return Response.success(commentDto.toResponse());
+    }
+
+    // 댓글 삭제
+    @DeleteMapping("/{postId}/comments/{id}")
+    public Response<CommentDeleteResponse> deleteComment(@PathVariable Integer postId, @PathVariable Integer id, Authentication authentication) {
+        Integer deletedCommentId = commentService.delete(postId, id, authentication.getName());
+        return Response.success(new CommentDeleteResponse("댓글 삭제 완료", deletedCommentId));
     }
 }
