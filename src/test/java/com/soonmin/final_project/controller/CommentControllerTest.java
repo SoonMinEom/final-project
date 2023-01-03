@@ -192,4 +192,65 @@ class CommentControllerTest {
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
     }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 삭제 성공")
+    void delete_success() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenReturn(1);
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result.id").value(1));
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("댓글 삭제 실패(1) : 인증 실패")
+    void delete_fail1() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage()));
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 삭제 실패(2) : 댓글 불일치")
+    void delete_fail2() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 삭제 실패(3) : 작성자 불일치")
+    void delete_fail3() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage()));
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 삭제 실패(4) : 데이터베이스 에러")
+    void delete_fail4() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.DATABASE_ERROR, ErrorCode.DATABASE_ERROR.getMessage()));
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf()))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
+    }
 }
