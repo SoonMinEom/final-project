@@ -1,4 +1,4 @@
-package com.soonmin.final_project.domain.dto;
+package com.soonmin.final_project.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

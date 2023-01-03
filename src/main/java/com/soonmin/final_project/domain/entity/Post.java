@@ -1,6 +1,6 @@
 package com.soonmin.final_project.domain.entity;
 
-import com.soonmin.final_project.domain.dto.PostDto;
+import com.soonmin.final_project.domain.dto.post.PostDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

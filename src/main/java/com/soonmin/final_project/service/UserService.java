@@ -1,9 +1,9 @@
 package com.soonmin.final_project.service;
 
 import com.soonmin.final_project.domain.UserRole;
-import com.soonmin.final_project.domain.dto.UserDto;
-import com.soonmin.final_project.domain.dto.UserJoinRequest;
-import com.soonmin.final_project.domain.dto.UserLoginRequest;
+import com.soonmin.final_project.domain.dto.user.UserDto;
+import com.soonmin.final_project.domain.dto.user.UserJoinRequest;
+import com.soonmin.final_project.domain.dto.user.UserLoginRequest;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;

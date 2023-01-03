@@ -1,7 +1,7 @@
 package com.soonmin.final_project.domain.entity;
 
 import com.soonmin.final_project.domain.UserRole;
-import com.soonmin.final_project.domain.dto.UserDto;
+import com.soonmin.final_project.domain.dto.user.UserDto;
 import lombok.*;
 
 import javax.persistence.*;
