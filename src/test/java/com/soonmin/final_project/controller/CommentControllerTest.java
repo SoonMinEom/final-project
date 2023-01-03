@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.dto.comment.CommentCreateRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
+import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
@@ -13,20 +14,23 @@ import com.soonmin.final_project.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.data.domain.Page;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -111,5 +115,17 @@ class CommentControllerTest {
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.result.errorCode").value("POST_NOT_FOUND"));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 목록 조회 성공")
+    void view_success() throws Exception {
+
+        mockMvc.perform(get("/api/v1/posts/1/comments")
+                        .with(csrf())
+                        .param("sort", "createdAt,desc"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
