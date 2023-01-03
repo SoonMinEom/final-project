@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CommentCreateRequest {
+public class CommentRequest {
     private String comment;
 
     public Comment toEntity(User user, Post post) {

@@ -1,11 +1,10 @@
 package com.soonmin.final_project.controller;
 
 import com.soonmin.final_project.domain.Response;
-import com.soonmin.final_project.domain.dto.comment.CommentCreateRequest;
+import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
 import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.dto.post.*;
-import com.soonmin.final_project.domain.entity.Comment;
 import com.soonmin.final_project.service.CommentService;
 import com.soonmin.final_project.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +65,7 @@ public class PostController {
 
     // 댓글 작성
     @PostMapping("/{postId}/comments")
-    public Response<CommentResponse> createComment(@PathVariable Integer postId, Authentication authentication, @RequestBody CommentCreateRequest request) {
+    public Response<CommentResponse> createComment(@PathVariable Integer postId, Authentication authentication, @RequestBody CommentRequest request) {
         CommentDto commentDto = commentService.create(postId, authentication.getName(), request);
         return Response.success(commentDto.toResponse());
     }
@@ -76,5 +75,12 @@ public class PostController {
     public Response<Page<CommentResponse>> viewComment(@PathVariable Integer postId, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<CommentResponse> commentPage  = commentService.view(postId, pageable);
         return Response.success(commentPage);
+    }
+
+    // 댓글 수정
+    @PutMapping("/{postId}/comments/{id}")
+    public Response<CommentResponse> updateComment(@PathVariable Integer postId, @PathVariable Integer id, @RequestBody CommentRequest request, Authentication authentication) {
+        CommentDto commentDto = commentService.update(postId, id, request, authentication.getName());
+        return Response.success(commentDto.toResponse());
     }
 }
