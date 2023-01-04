@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
-
     private final UserRepository userRepository;
 
     // 포스트 작성
@@ -100,4 +99,5 @@ public class PostService {
 
         return postPage.map(post -> post.toDto().toViewResponse());
     }
+
 }

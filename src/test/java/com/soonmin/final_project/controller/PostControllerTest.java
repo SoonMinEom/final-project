@@ -8,6 +8,7 @@ import com.soonmin.final_project.domain.dto.post.PostViewResponse;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
 import com.soonmin.final_project.service.CommentService;
+import com.soonmin.final_project.service.LikeService;
 import com.soonmin.final_project.service.PostService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +45,8 @@ class PostControllerTest {
     PostService postService;
     @MockBean
     CommentService commentService;
+    @MockBean
+    LikeService likeService;
     
     @Autowired
     ObjectMapper objectMapper;
@@ -287,5 +290,39 @@ class PostControllerTest {
         mockMvc.perform(get("/api/v1/posts/my").with(csrf()))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("좋아요 누르기 성공")
+    void like_success() throws Exception {
+        when(likeService.like(any(),any())).thenReturn(1);
+
+        mockMvc.perform(post("/api/v1/posts/1/likes").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.result").value("좋아요를 눌렀습니다."));
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("좋아요 누르기 실패(1) - 로그인 하지 않은 경우")
+    void like_fail1() throws Exception {
+        when(likeService.like(any(),any())).thenThrow(new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(post("/api/v1/posts/1/likes").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("좋아요 누르기 실패(2) - 해당 포스트가 없는 경우")
+    void like_fail2() throws Exception {
+        when(likeService.like(any(),any())).thenThrow(new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(post("/api/v1/posts/1/likes").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }
