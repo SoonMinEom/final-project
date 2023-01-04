@@ -195,6 +195,20 @@ class CommentControllerTest {
 
     @Test
     @WithMockUser
+    @DisplayName("댓글 수정 실패(5) : Post 없는 경우")
+    void update_fail5() throws Exception {
+        when(commentService.update(any(), any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(put("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
     @DisplayName("댓글 삭제 성공")
     void delete_success() throws Exception {
         when(commentService.delete(any(), any(), any())).thenReturn(1);
@@ -252,5 +266,19 @@ class CommentControllerTest {
                         .with(csrf()))
                 .andDo(print())
                 .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("댓글 삭제 실패(5) : Post 없는 경우")
+    void delete_fail5() throws Exception {
+        when(commentService.delete(any(), any(), any())).thenThrow(new LikeLionException(ErrorCode.POST_NOT_FOUND, ErrorCode.POST_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(delete("/api/v1/posts/1/comments/1")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(commentRequest)))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 }
