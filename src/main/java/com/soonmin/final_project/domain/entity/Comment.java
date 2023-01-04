@@ -5,14 +5,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Getter
 @Builder
+@SQLDelete(sql = "UPDATE comment SET deleted_at = current_timestamp WHERE id = ?")
+@Where(clause = "deleted_at is null")
 public class Comment extends PostBase{
 
     @Id
@@ -27,6 +32,8 @@ public class Comment extends PostBase{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    private LocalDateTime deletedAt;
 
     public CommentDto toDto() {
         return CommentDto.builder()
