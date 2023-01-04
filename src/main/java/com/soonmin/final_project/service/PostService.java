@@ -47,9 +47,9 @@ public class PostService {
 
     // 포스트 리스트 보기
     @Transactional
-    public List<PostViewResponse> viewList(Pageable pageable) {
-        Page<Post> postList = postRepository.findAll(pageable);
-        return postList.stream().map(post -> post.toDto().toViewResponse()).collect(Collectors.toList());
+    public Page<PostViewResponse> viewList(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(post -> post.toDto().toViewResponse());
     }
 
     // 포스트 삭제

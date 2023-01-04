@@ -38,9 +38,9 @@ public class PostController {
 
     // 포스트 리스트 보기
     @GetMapping
-    public Response<PostList> viewList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<PostViewResponse> postList = postService.viewList(pageable);
-        return Response.success(new PostList(postList, pageable));
+    public Response<Page<PostViewResponse>> viewList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> postPage = postService.viewList(pageable);
+        return Response.success(postPage);
     }
 
     // 포스트 디테일 보기

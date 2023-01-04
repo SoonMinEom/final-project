@@ -119,6 +119,20 @@ class PostControllerTest {
 
     @Test
     @WithMockUser
+    @DisplayName("포스트 리스트 조회 성공")
+    void viewList_success() throws Exception {
+        when(postService.viewList(any())).thenReturn(postPage);
+
+        mockMvc.perform(get("/api/v1/posts").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.pageable").exists());
+
+    }
+
+    @Test
+    @WithMockUser
     @DisplayName("포스트 수정 성공")
     void updatePost_success() throws Exception {
         PostUpdateRequest postUpdateRequest = new PostUpdateRequest("수정", "완료");
