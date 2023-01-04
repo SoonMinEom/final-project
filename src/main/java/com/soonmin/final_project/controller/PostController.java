@@ -91,4 +91,11 @@ public class PostController {
         Integer deletedCommentId = commentService.delete(postId, id, authentication.getName());
         return Response.success(new CommentDeleteResponse("댓글 삭제 완료", deletedCommentId));
     }
+
+    // 마이 피드
+    @GetMapping("/my")
+    public Response<Page<PostViewResponse>> myFeed(Authentication authentication, @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> postPage = postService.myFeed(authentication.getName(), pageable);
+        return Response.success(postPage);
+    }
 }

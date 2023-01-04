@@ -23,6 +23,8 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,7 +57,7 @@ class CommentControllerTest {
     @BeforeEach
     void beforeEach() {
         user = new User(1, "name", "password", UserRole.USER);
-        post = new Post(1, "title","body",user);
+        post = new Post(1, "title","body", user, LocalDateTime.now());
         commentRequest = new CommentRequest("comment test");
         dto = CommentDto.builder()
                 .id(1)
