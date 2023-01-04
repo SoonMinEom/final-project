@@ -6,7 +6,9 @@ import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
 import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.dto.post.*;
+import com.soonmin.final_project.domain.entity.Like;
 import com.soonmin.final_project.service.CommentService;
+import com.soonmin.final_project.service.LikeService;
 import com.soonmin.final_project.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,7 @@ public class PostController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final LikeService likeService;
 
     // 포스트 등록
     @PostMapping
@@ -97,5 +100,20 @@ public class PostController {
     public Response<Page<PostViewResponse>> myFeed(Authentication authentication, @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostViewResponse> postPage = postService.myFeed(authentication.getName(), pageable);
         return Response.success(postPage);
+    }
+
+    // 좋아요 누르기
+    @PostMapping("/{postId}/likes")
+    public Response<String> like(@PathVariable Integer postId, Authentication authentication) {
+        Integer result = likeService.like(postId, authentication.getName());
+        if (result == 0) return Response.success("좋아요를 취소했습니다.");
+        else return Response.success("좋아요를 눌렀습니다.");
+    }
+
+    // 좋아요 개수
+    @GetMapping("/{postId}/likes")
+    public Response<Integer> numOfLikes(@PathVariable Integer postId) {
+        Integer result = likeService.numOfLikes(postId);
+        return Response.success(result);
     }
 }
