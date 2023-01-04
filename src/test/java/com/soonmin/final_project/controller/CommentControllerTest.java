@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
+import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
@@ -17,11 +18,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -51,11 +58,12 @@ class CommentControllerTest {
     Post post;
     CommentDto dto;
     CommentRequest commentRequest;
+    Page<CommentResponse> commentPage;
 
     @BeforeEach
     void beforeEach() {
         user = new User(1, "name", "password", UserRole.USER);
-        post = new Post(1, "title","body",user);
+        post = new Post(1, "title","body", user, LocalDateTime.now());
         commentRequest = new CommentRequest("comment test");
         dto = CommentDto.builder()
                 .id(1)
@@ -63,6 +71,13 @@ class CommentControllerTest {
                 .post(post)
                 .user(user)
                 .build();
+
+        List<CommentResponse> commentList = new ArrayList<>();
+        commentList.add(new CommentResponse(1, "comment1", "userName1", 1, LocalDateTime.now()));
+        commentList.add(new CommentResponse(2, "comment2", "userName2", 2, LocalDateTime.now()));
+        commentList.add(new CommentResponse(3, "comment3", "userName3", 3, LocalDateTime.now()));
+
+        commentPage = new PageImpl<>(commentList);
     }
 
     @Test
@@ -115,11 +130,14 @@ class CommentControllerTest {
     @DisplayName("댓글 목록 조회 성공")
     void view_success() throws Exception {
 
+        when(commentService.view(any(), any())).thenReturn(commentPage);
+
         mockMvc.perform(get("/api/v1/posts/1/comments")
-                        .with(csrf())
-                        .param("sort", "createdAt,desc"))
+                        .with(csrf()))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.pageable").exists());
     }
 
     @Test

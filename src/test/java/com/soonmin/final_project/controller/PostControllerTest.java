@@ -4,19 +4,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.dto.post.PostCreateRequest;
 import com.soonmin.final_project.domain.dto.post.PostDto;
 import com.soonmin.final_project.domain.dto.post.PostUpdateRequest;
+import com.soonmin.final_project.domain.dto.post.PostViewResponse;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
+import com.soonmin.final_project.service.CommentService;
 import com.soonmin.final_project.service.PostService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -33,6 +42,8 @@ class PostControllerTest {
     
     @MockBean
     PostService postService;
+    @MockBean
+    CommentService commentService;
     
     @Autowired
     ObjectMapper objectMapper;
@@ -40,13 +51,26 @@ class PostControllerTest {
     @Autowired
     MockMvc mockMvc;
 
-    PostCreateRequest postCreateRequest = new PostCreateRequest("test", "test");
+    PostCreateRequest postCreateRequest;
+    PostDto postDto;
+    Page<PostViewResponse> postPage;
 
-    PostDto postDto = PostDto.builder()
-            .id(1)
-            .title("test")
-            .body("test")
-            .build();
+    @BeforeEach
+    void beforeEach() {
+        postCreateRequest = new PostCreateRequest("test", "test");
+        postDto = PostDto.builder()
+                .id(1)
+                .title("test")
+                .body("test")
+                .build();
+
+        List<PostViewResponse> postList = new ArrayList<>();
+        postList.add(new PostViewResponse(1, "title1", "body1","userName1", LocalDateTime.now(),LocalDateTime.now()));
+        postList.add(new PostViewResponse(2, "title2", "body2","userName2", LocalDateTime.now(),LocalDateTime.now()));
+        postList.add(new PostViewResponse(3, "title3", "body3","userName3", LocalDateTime.now(),LocalDateTime.now()));
+
+        postPage = new PageImpl<>(postList);
+    }
 
 
     @Test
@@ -91,6 +115,20 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.result.title").value(postDto.getTitle()))
                 .andExpect(jsonPath("$.result.body").value(postDto.getBody()))
                 .andExpect(jsonPath("$.result.userName").value(postDto.getUserName()));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("포스트 리스트 조회 성공")
+    void viewList_success() throws Exception {
+        when(postService.viewList(any())).thenReturn(postPage);
+
+        mockMvc.perform(get("/api/v1/posts").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.pageable").exists());
+
     }
 
     @Test
@@ -223,5 +261,31 @@ class PostControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.result.errorCode").value("DATABASE_ERROR"))
                 .andExpect(jsonPath("$.result.message").value("DB에러"));
+    }
+
+    @Test
+    @WithMockUser
+    @DisplayName("마이피드 조회 성공")
+    void myFeed_success() throws Exception {
+
+        when(postService.myFeed(any(), any())).thenReturn(postPage);
+
+        mockMvc.perform(get("/api/v1/posts/my").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result.pageable").exists());
+    }
+
+    @Test
+    @WithAnonymousUser
+    @DisplayName("마이피드 조회 실패 - 로그인 하지 않은 경우")
+    void myFeed_fail() throws Exception {
+
+        when(postService.myFeed(any(), any())).thenThrow(new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(get("/api/v1/posts/my").with(csrf()))
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
     }
 }

@@ -38,9 +38,9 @@ public class PostController {
 
     // 포스트 리스트 보기
     @GetMapping
-    public Response<PostList> viewList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        List<PostViewResponse> postList = postService.viewList(pageable);
-        return Response.success(new PostList(postList, pageable));
+    public Response<Page<PostViewResponse>> viewList(@PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> postPage = postService.viewList(pageable);
+        return Response.success(postPage);
     }
 
     // 포스트 디테일 보기
@@ -90,5 +90,12 @@ public class PostController {
     public Response<CommentDeleteResponse> deleteComment(@PathVariable Integer postId, @PathVariable Integer id, Authentication authentication) {
         Integer deletedCommentId = commentService.delete(postId, id, authentication.getName());
         return Response.success(new CommentDeleteResponse("댓글 삭제 완료", deletedCommentId));
+    }
+
+    // 마이 피드
+    @GetMapping("/my")
+    public Response<Page<PostViewResponse>> myFeed(Authentication authentication, @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostViewResponse> postPage = postService.myFeed(authentication.getName(), pageable);
+        return Response.success(postPage);
     }
 }

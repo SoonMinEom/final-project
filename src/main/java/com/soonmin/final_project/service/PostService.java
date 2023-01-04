@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,9 +47,9 @@ public class PostService {
 
     // 포스트 리스트 보기
     @Transactional
-    public List<PostViewResponse> viewList(Pageable pageable) {
-        Page<Post> postList = postRepository.findAll(pageable);
-        return postList.stream().map(post -> post.toDto().toViewResponse()).collect(Collectors.toList());
+    public Page<PostViewResponse> viewList(Pageable pageable) {
+        Page<Post> postPage = postRepository.findAll(pageable);
+        return postPage.map(post -> post.toDto().toViewResponse());
     }
 
     // 포스트 삭제
@@ -86,5 +87,17 @@ public class PostService {
         postRepository.save(post);
 
         return id;
+    }
+
+    // 마이 피드
+    public Page<PostViewResponse> myFeed(String userName, Pageable pageable) {
+        // 유저가 존재하는지 검증(로그인)
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
+        // 유저 정보로 포스트 검색
+        Page<Post> postPage = postRepository.findByUser(user, pageable);
+
+        return postPage.map(post -> post.toDto().toViewResponse());
     }
 }
