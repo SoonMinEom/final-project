@@ -1,10 +1,13 @@
 package com.soonmin.final_project.service;
 
+import com.soonmin.final_project.domain.dto.alarm.AlarmType;
+import com.soonmin.final_project.domain.entity.Alarm;
 import com.soonmin.final_project.domain.entity.Like;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
+import com.soonmin.final_project.repository.AlarmRepository;
 import com.soonmin.final_project.repository.LikeRepository;
 import com.soonmin.final_project.repository.PostRepository;
 import com.soonmin.final_project.repository.UserRepository;
@@ -20,6 +23,7 @@ public class LikeService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final AlarmRepository alarmRepository;
 
 
     // 좋아요 누르기
@@ -42,6 +46,8 @@ public class LikeService {
         } else {
             // 존재하지 않으면 추가하고
             likeRepository.save(Like.pushLike(post, user));
+            // 알람 보내기
+            alarmRepository.save(Alarm.makeAlarm(AlarmType.NEW_LIKE_ON_POST, post.getUser(), user.getId(), post.getId()));
             return 1;
         }
     }

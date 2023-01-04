@@ -30,7 +30,7 @@ public class SecurityConfig {
                 .cors().and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/{id}/role/change", "/api/v1/posts",  "/api/v1/posts/{postId}/comments", "api/v1/posts/{postId}/likes").authenticated()
-                .antMatchers(HttpMethod.GET, "/api/v1/posts/my").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/posts/my", "/api/v1/alarms").authenticated()
                 .antMatchers(HttpMethod.PUT,"/api/v1/posts/{id}", "/api/v1/posts/{postId}/comments/{id}").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/posts/{id}", "/api/v1/posts/{postId}/comments/{id}").authenticated()
                 .anyRequest().permitAll()

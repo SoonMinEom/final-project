@@ -1,13 +1,16 @@
 package com.soonmin.final_project.service;
 
+import com.soonmin.final_project.domain.dto.alarm.AlarmType;
 import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
 import com.soonmin.final_project.domain.dto.comment.CommentResponse;
+import com.soonmin.final_project.domain.entity.Alarm;
 import com.soonmin.final_project.domain.entity.Comment;
 import com.soonmin.final_project.domain.entity.Post;
 import com.soonmin.final_project.domain.entity.User;
 import com.soonmin.final_project.exception.ErrorCode;
 import com.soonmin.final_project.exception.LikeLionException;
+import com.soonmin.final_project.repository.AlarmRepository;
 import com.soonmin.final_project.repository.CommentRepository;
 import com.soonmin.final_project.repository.PostRepository;
 import com.soonmin.final_project.repository.UserRepository;
@@ -25,6 +28,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final AlarmRepository alarmRepository;
 
     // 댓글 작성
     public CommentDto create(Integer postId, String userName, CommentRequest request) {
@@ -38,6 +42,9 @@ public class CommentService {
 
         // 코맨트 작성
         Comment comment = commentRepository.save(request.toEntity(user, post));
+
+        // 알람 보내기
+        alarmRepository.save(Alarm.makeAlarm(AlarmType.NEW_COMMENT_ON_POST, post.getUser(), user.getId(), post.getId()));
 
         //Dto 리턴
         return comment.toDto();
