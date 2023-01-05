@@ -1,8 +1,33 @@
 # MutsaSNS
-
+> 회원 가입, 로그인, 인증·인가를 기반으로 게시글과 댓글의 CRUD, 마이 피드, 좋아요, 알람 기능을 구현한 SNS 웹 페이지
+---
 ## URL
-> http://ec2-52-78-223-101.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+> - [Swagger](http://ec2-52-78-223-101.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/)
+> - [WebPage](http://ec2-52-78-223-101.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/)
+---
+## ERD
+![erd](./img/erd.png)
+---
+## 체크리스트
+📃체크리스트를 잘 작성하고 싶은 나, 이기적인가요?  
+- 전혀 그렇지 않답니다 희망을 가지세욤
+  - 마자요 희망을가저요
+  - 감사합니다  
+    📃감사합니까 휴먼?  
+    조심하십쇼 휴먼  
 
+📃후후 이렇게 하면 되긴 하네ㅐ요?>
+- 이렇게가 어떻게 인데요
+  - 일단 띄어 쓰기 두번 해줘요  
+  그리고요?  
+
+📃 엔터 세번 해요
+- 앵 그냥 엔터만 세번해도될듯?
+
+📃봐봐 되는구만 호들갑은
+
+
+  
 ## Endpoint
 
 ### User

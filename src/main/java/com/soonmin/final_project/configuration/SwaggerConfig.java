@@ -30,7 +30,7 @@ public class SwaggerConfig {
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
                 .title("[SNS PROJECT] REST API")
-                .description("회원가입, 로그인, 게시글 작성·수정·삭제·조회, 댓글 작성·수정·삭제·조회, 마이 피드, 좋아요, 알람 기능을 구현한 API")
+                .description("회원가입, 로그인, 인증과 인가를 기반으로 게시글·댓글의 CRUD, 마이 피드, 좋아요, 알람 기능을 구현한 API")
                 .contact(new Contact("[SoonMin]", "https://gitlab.com/nuka94/finalproject_eomsoonmin", "skdlfma123@gmail.com"))
                 .version("1.0")
                 .build();
