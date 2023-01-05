@@ -2,11 +2,10 @@ package com.soonmin.final_project.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -21,9 +20,19 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
+                .apiInfo(getApiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.soonmin.final_project.controller"))
                 .paths(PathSelectors.any())
+                .build();
+    }
+
+    private ApiInfo getApiInfo() {
+        return new ApiInfoBuilder()
+                .title("[SNS PROJECT] REST API")
+                .description("회원가입, 로그인, 게시글 작성·수정·삭제·조회, 댓글 작성·수정·삭제·조회, 마이 피드, 좋아요, 알람 기능을 구현한 API")
+                .contact(new Contact("[SoonMin]", "https://gitlab.com/nuka94/finalproject_eomsoonmin", "skdlfma123@gmail.com"))
+                .version("1.0")
                 .build();
     }
 
@@ -43,4 +52,6 @@ public class SwaggerConfig {
     private ApiKey apiKey() {
         return new ApiKey("Authorization", "Authorization", "header");
     }
+
+
 }
