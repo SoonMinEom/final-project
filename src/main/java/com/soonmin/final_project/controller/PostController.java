@@ -89,7 +89,7 @@ public class PostController {
     // 댓글 조회
     @GetMapping("/{postId}/comments")
     @ApiOperation(value = "댓글 조회", notes = "특정 게시글에 달린 댓글을 10개 단위로 조회합니다. 로그인하지 않아도 조회할 수 있습니다.")
-    public Response<Page<CommentResponse>> viewComment(@PathVariable Integer postId, @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response<Page<CommentResponse>> viewComment(@PathVariable Integer postId, @ApiIgnore @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<CommentResponse> commentPage  = commentService.view(postId, pageable);
         return Response.success(commentPage);
     }
