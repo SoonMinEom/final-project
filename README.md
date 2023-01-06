@@ -9,22 +9,26 @@
 ![erd](./img/erd.png)
 ---
 ## 체크리스트
-📃체크리스트를 잘 작성하고 싶은 나, 이기적인가요?  
-- 전혀 그렇지 않답니다 희망을 가지세욤
-  - 마자요 희망을가저요
-  - 감사합니다  
-    📃감사합니까 휴먼?  
-    조심하십쇼 휴먼  
+📃Swagger : API 문서 자동화. 간편하게 API 테스트 가능
+- 어노테이션을 활용하여 각 기능별 이름, 설명, 매게변수를 정리
 
-📃후후 이렇게 하면 되긴 하네ㅐ요?>
-- 이렇게가 어떻게 인데요
-  - 일단 띄어 쓰기 두번 해줘요  
-  그리고요?  
+📃GitLab CI/CD Pipeline : 배포 자동화
+- Dockerfile, gitlab-ci.yml 로 CI 구축. main branch 에  push 될 때만 image update.
+- image update 된 경우에만 배포하도록 deploy.sh 작성
+- crontab 으로 매 분마다 deploy.sh 자동 실행.
 
-📃 엔터 세번 해요
-- 앵 그냥 엔터만 세번해도될듯?
+📃User 회원 가입과 로그인
+- 회원 가입 : userName, password 입력을 통한 가입
+  - userName 중복 체크
+  - password 복호화
+- 로그인 : 로그인 성공 시 JWT 토큰 발급
 
-📃봐봐 되는구만 호들갑은
+📃Post 작성·조회·수정·삭제
+- 작성 : 로그인한 사용자만 작성 가능. Security filter chain 에서 JWT 토큰 검증 (존재·만료 여부)
+- 조회 : 로그인 하지 않아도 조회 가능. Post 목록 조회 기능 포함.
+  - Post 목록 조회는 20개 단위로 페이징 됨
+- 수정 : 해당 Post 를 작성한 사용자만 수정 가능. JWT 토큰을 열어 userName 검증.
+- 삭제 : 해당 Post 를 작성한 사용자만 삭제 가능. JWT 토큰을 열어 userName 검증. DB 에서의 논리적 삭제로 구현
 
 
   
