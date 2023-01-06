@@ -18,9 +18,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(HelloController.class)
+@WebMvcTest(HelloRestController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-class HelloControllerTest {
+class HelloRestControllerTest {
 
     @Autowired
     MockMvc mockMvc;

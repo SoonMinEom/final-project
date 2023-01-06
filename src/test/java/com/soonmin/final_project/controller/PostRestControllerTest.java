@@ -37,9 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(PostController.class)
+@WebMvcTest(PostRestController.class)
 @MockBean(JpaMetamodelMappingContext.class)
-class PostControllerTest {
+class PostRestControllerTest {
     
     @MockBean
     PostService postService;

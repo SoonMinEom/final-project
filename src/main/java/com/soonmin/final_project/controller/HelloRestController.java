@@ -12,7 +12,7 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/api/v1/hello")
 @RequiredArgsConstructor
 @ApiIgnore
-public class HelloController {
+public class HelloRestController {
 
     private final AlgorithmService algorithmService;
 

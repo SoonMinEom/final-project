@@ -20,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/alarms")
 @RequiredArgsConstructor
-public class AlarmController {
+public class AlarmRestController {
 
     private final AlarmService alarmService;
 

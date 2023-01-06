@@ -6,7 +6,6 @@ import com.soonmin.final_project.domain.dto.comment.CommentRequest;
 import com.soonmin.final_project.domain.dto.comment.CommentDto;
 import com.soonmin.final_project.domain.dto.comment.CommentResponse;
 import com.soonmin.final_project.domain.dto.post.*;
-import com.soonmin.final_project.domain.entity.Like;
 import com.soonmin.final_project.service.CommentService;
 import com.soonmin.final_project.service.LikeService;
 import com.soonmin.final_project.service.PostService;
@@ -22,13 +21,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 @Slf4j
-public class PostController {
+public class PostRestController {
 
     private final PostService postService;
     private final CommentService commentService;

@@ -1,6 +1,5 @@
 package com.soonmin.final_project.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.soonmin.final_project.domain.UserRole;
 import com.soonmin.final_project.domain.dto.comment.CommentRequest;
@@ -38,7 +37,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-@WebMvcTest(PostController.class)
+@WebMvcTest(PostRestController.class)
 @MockBean(JpaMetamodelMappingContext.class)
 class CommentControllerTest {
 
