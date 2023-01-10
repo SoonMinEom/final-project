@@ -71,6 +71,10 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()-> new LikeLionException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
 
+        // 댓글의 작성자가 존재하는 지 검증
+        userRepository.findById(comment.getUser().getId())
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
+
         // 댓글의 작성자와 수정 요청한 User 가 같은지 검증
         if (!comment.getUser().getUserName().equals(userName)) {
             throw new LikeLionException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage());
@@ -91,6 +95,10 @@ public class CommentService {
         // 댓글이 존재하는지 검증
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(()-> new LikeLionException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
+
+        // 댓글의 작성자가 존재하는 지 검증
+        userRepository.findById(comment.getUser().getId())
+                .orElseThrow(() -> new LikeLionException(ErrorCode.USERNAME_NOT_FOUND, ErrorCode.USERNAME_NOT_FOUND.getMessage()));
 
         // 댓글의 작성자와 삭제 요청한 User 가 같은지 검증
         if (!comment.getUser().getUserName().equals(userName)) {
